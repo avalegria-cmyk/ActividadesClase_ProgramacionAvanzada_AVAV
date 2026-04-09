@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Component</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="contenedor-notis"></div>
+
+    <main class="app-shell">
+        <section class="hero-card">
+            <div class="hero-layout">
+                <div class="hero-copy">
+                    <span class="badge">Usuario destacado</span>
+                    <h1>Panel de acciones</h1>
+                    <p>
+                        Interfaz con iconos, colores y notificaciones elegantes para
+                        brindar una experiencia más limpia, moderna y profesional.
+                    </p>
+                </div>
+
+                <div class="user-card">
+                    <div class="avatar-wrap">
+                        <img src="gatomeme.jpg" alt="Usuario Adonis Alegria Valle" class="user-avatar">
+                    </div>
+                    <div class="user-info">
+                        <strong>Adonis Alegria Valle</strong>
+                        <span>Activo ahora</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="acciones-card">
+            <h2>Acciones </h2>
+            <div class="acciones-grid">
+                <btn-accion tipo="correo" texto="Enviar correo" mensaje="Correo enviado" sub="El mensaje fue entregado correctamente">
+                </btn-accion>
+                <btn-accion tipo="amigo" texto="Agregar amigo" mensaje="Amigo agregado" sub="Ahora forma parte de tu lista">
+                </btn-accion>
+                <btn-accion tipo="eliminar" texto="Eliminar elemento" mensaje="Elemento eliminado" sub="Se eliminó correctamente del sistema">
+                </btn-accion>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

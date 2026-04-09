@@ -1,0 +1,162 @@
+/* Contenedor principal */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Tema claro - Fondo blanco */
+.tema-claro {
+    background-color: #ffffff;
+    color: #333333;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Tema oscuro - Fondo oscuro */
+.tema-oscuro {
+    background-color: #1a1a1a;
+    color: #000000;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Contenedor del componente */
+.contenedor {
+    text-align: center;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+/* Sombra en tema claro */
+.tema-claro .contenedor {
+    background: #b2b1b1;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Sombra en tema oscuro */
+.tema-oscuro .contenedor {
+    background: #2a2a2a;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* Título principal */
+h1 {
+    color: rgb(149, 6, 6);
+    font-size: 2rem;
+    margin-bottom: 30px;
+    animation: slideIn 0.6s ease-out;
+}
+
+/* Descripción */
+p {
+    font-size: 1rem;
+    margin-bottom: 30px;
+    opacity: 0.8;
+    line-height: 1.6;
+}
+
+/* Botón de cambio de tema */
+.btn-tema {
+    /* Tamaño y espacio */
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid;
+    font-size: 3rem;
+
+    /* Colores según tema */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 30px;
+}
+
+/* Botón en tema claro */
+.tema-claro .btn-tema {
+    border-color: #333333;
+    color: #333333;
+}
+
+/* Botón en tema oscuro */
+.tema-oscuro .btn-tema {
+    border-color: #f0f0f0;
+    color: #f0f0f0;
+}
+
+/* Efecto hover en el botón */
+.btn-tema:hover {
+    transform: scale(1.15) rotate(20deg);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Efecto click en el botón */
+.btn-tema:active {
+    transform: scale(0.95);
+}
+
+/* Información del tema actual */
+.info-tema {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+/* Info en tema claro */
+.tema-claro .info-tema {
+    background-color: #e8f4f8;
+    color: #0066cc;
+}
+
+/* Info en tema oscuro */
+.tema-oscuro .info-tema {
+    background-color: #1a3a3a;
+    color: #66ccff;
+}
+
+/* Animación de entrada */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive para celulares */
+@media (max-width: 480px) {
+    .contenedor {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .btn-tema {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+}
