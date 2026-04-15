@@ -8,6 +8,7 @@ public class Main {
         NotificacionesService notiEmail = new NotificacionesService(email);
         NotificacionesService notiWhatsapp = new NotificacionesService(whatsapp);
         NotificacionesService notiSMS = new NotificacionesService(sms);
+        
         System.err.println("Enviando notificaciones...");
         notiEmail.notificarUsuario("correo@example.com", "Mensaje por Email");
         notiWhatsapp.notificarUsuario("0963483452", "Mensaje por WhatsApp");
