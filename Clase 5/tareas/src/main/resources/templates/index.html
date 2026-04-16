@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Acciones</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+</head>
+<body>
+    <main class="app-shell">
+
+        <section class="hero-card">
+            <div class="hero-layout">
+                <div class="hero-copy">
+                    <span class="badge">Spring Boot API</span>
+                    <h1>Panel de acciones</h1>
+                    <p>
+                        Interfaz de servicios de notificaciones y reportes construida con
+                        Spring Boot. Selecciona una acción para ejecutar el endpoint correspondiente.
+                    </p>
+                </div>
+
+                <div class="user-card">
+                    <div class="avatar-wrap">
+                        <img th:src="@{/gatomeme.jpg}" alt="Avatar" class="user-avatar">
+                    </div>
+                    <div class="user-info">
+                        <strong>Adonis Alegria</strong>
+                        <span>Activo ahora</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="acciones-card">
+            <h2>Acciones disponibles</h2>
+            <div class="acciones-grid">
+
+                <a href="/notificaciones" class="accion-btn correo">
+                    <span class="accion-icon">✉️</span>
+                    <span>Enviar notificaciones</span>
+                    <span class="accion-sub">Email, WhatsApp y SMS</span>
+                </a>
+
+                <a href="/reporte" class="accion-btn reporte">
+                    <span class="accion-icon">📄</span>
+                    <span>Generar reporte</span>
+                    <span class="accion-sub">Genera y envía PDF por email</span>
+                </a>
+
+            </div>
+        </section>
+
+    </main>
+</body>
+</html>

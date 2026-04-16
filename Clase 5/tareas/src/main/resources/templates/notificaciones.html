@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones</title>
+    <link rel="stylesheet" th:href="@{/style.css}">
+    <style>
+        /* ── Botones de acción estilo Clase 3 ── */
+        .noti-btn {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: "Poppins", sans-serif;
+            letter-spacing: 0.3px;
+            transition: transform 0.2s ease, box-shadow 0.25s ease, filter 0.25s ease;
+        }
+        .noti-btn:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.08);
+        }
+        .noti-btn:active { transform: scale(0.98); }
+        .noti-btn.email    { background: linear-gradient(135deg, #2563eb, #0ea5e9); box-shadow: 0 10px 18px rgba(37,99,235,0.28); }
+        .noti-btn.whatsapp { background: linear-gradient(135deg, #16a34a, #22c55e); box-shadow: 0 10px 18px rgba(34,197,94,0.28); }
+        .noti-btn.sms      { background: linear-gradient(135deg, #ef4444, #f97316); box-shadow: 0 10px 18px rgba(239,68,68,0.28); }
+        .noti-btn svg { width: 18px; height: 18px; }
+
+        /* ── Botón volver ── */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.06);
+            color: white;
+            font-family: "Poppins", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+            margin-top: 20px;
+        }
+        .back-btn:hover {
+            background: rgba(255,255,255,0.11);
+            transform: translateX(-3px);
+        }
+
+        /* ── Info card derecha hero ── */
+        .services-card {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 18px 20px;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.08);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+        }
+        .services-card strong { font-size: 1rem; }
+        .services-card .svc-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .svc-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.83rem;
+            color: var(--text-soft);
+        }
+        .svc-dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ── Toast notification ── */
+        #contenedor-notis {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: min(360px, calc(100vw - 24px));
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 99999;
+            pointer-events: none;
+        }
+        #contenedor-notis .toast-noti {
+            pointer-events: all;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, var(--tn-from, #2563eb), var(--tn-to, #0ea5e9));
+            border-radius: 16px;
+            box-shadow: 0 10px 32px rgba(0,0,0,0.35);
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            animation: tnSlideIn 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.25s ease;
+            font-family: "Poppins", sans-serif;
+        }
+        #contenedor-notis .toast-noti::before {
+            content: "";
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.12), transparent);
+            transform: rotate(45deg);
+            pointer-events: none;
+        }
+        #contenedor-notis .toast-noti.hide {
+            opacity: 0;
+            transform: translateX(40px) scale(0.96);
+        }
+        #contenedor-notis .toast-noti:hover { transform: scale(1.02); }
+        .tn-icon {
+            min-width: 52px; width: 52px; height: 52px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            flex-shrink: 0;
+        }
+        .tn-icon svg { width: 26px; height: 26px; }
+        .tn-body { flex: 1; padding-right: 28px; }
+        .tn-title {
+            font-size: 13px; font-weight: 700;
+            letter-spacing: 0.8px; text-transform: uppercase;
+        }
+        .tn-msg { font-size: 12px; opacity: 0.9; margin-top: 3px; line-height: 1.4; }
+        .tn-close {
+            position: absolute; top: 8px; right: 10px;
+            background: none; border: none;
+            font-size: 22px; line-height: 1;
+            color: #fff; opacity: 0.75; cursor: pointer;
+            transition: opacity 0.2s;
+        }
+        .tn-close:hover { opacity: 1; }
+        @keyframes tnSlideIn {
+            from { transform: translateX(80px); opacity: 0; }
+            to   { transform: translateX(0);    opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="contenedor-notis"></div>
+
+    <main class="app-shell">
+
+        <section class="hero-card">
+            <div class="hero-layout">
+                <div class="hero-copy">
+                    <span class="badge"> Notificaciones</span>
+                    <h1>Panel de notificaciones</h1>
+                    <p>Haz clic en cada canal para ver el resultado enviado por el servicio Java.</p>
+                </div>
+                <div class="services-card">
+                    <strong>NotificacionesService</strong>
+                    <div class="svc-list">
+                        <div class="svc-item">
+                            <span class="svc-dot" style="background:#0ea5e9;"></span>
+                            EmailService
+                        </div>
+                        <div class="svc-item">
+                            <span class="svc-dot" style="background:#22c55e;"></span>
+                            WhatsAppService
+                        </div>
+                        <div class="svc-item">
+                            <span class="svc-dot" style="background:#f97316;"></span>
+                            SMSService
+                        </div>
+                    </div>
+                    <span style="color:#a7f3d0;font-size:0.8rem;font-weight:600;">3 canales activos</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="acciones-card">
+            <h2>Canales</h2>
+            <div class="acciones-grid">
+
+                <!-- EMAIL -->
+                <button class="noti-btn email"
+                        th:attr="data-msg=${resultados[0]},data-tipo='email'"
+                        onclick="dispararToast(this)">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/>
+                    </svg>
+                    Enviar Email
+                </button>
+
+                <!-- WHATSAPP -->
+                <button class="noti-btn whatsapp"
+                        th:attr="data-msg=${resultados[1]},data-tipo='whatsapp'"
+                        onclick="dispararToast(this)">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/>
+                        <path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.306A9.953 9.953 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+                    </svg>
+                    Enviar WhatsApp
+                </button>
+
+                <!-- SMS -->
+                <button class="noti-btn sms"
+                        th:attr="data-msg=${resultados[2]},data-tipo='sms'"
+                        onclick="dispararToast(this)">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Enviar SMS
+                </button>
+
+            </div>
+            <a href="/" class="back-btn">
+                    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 5l-7 7 7 7"/>
+                    </svg>
+                    Volver al panel
+                </a>
+        </section>
+
+    </main>
+
+    <script>
+        const TEMAS = {
+            email:    { from: '#2563eb', to: '#0ea5e9', soft: 'rgba(255,255,255,0.18)',
+                        label: 'Email enviado',
+                        icon: `<svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" width="28" height="28"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>` },
+            whatsapp: { from: '#16a34a', to: '#22c55e', soft: 'rgba(255,255,255,0.18)',
+                        label: 'WhatsApp enviado',
+                        icon: `<svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 2C6.477 2 2 6.477 2 12c0 1.89.525 3.66 1.438 5.168L2 22l4.978-1.306A9.953 9.953 0 0 0 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg>` },
+            sms:      { from: '#ef4444', to: '#f97316', soft: 'rgba(255,255,255,0.18)',
+                        label: 'SMS enviado',
+                        icon: `<svg stroke-linejoin="round" stroke-linecap="round" stroke-width="2" stroke="currentColor" fill="none" viewBox="0 0 24 24" width="28" height="28"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>` }
+        };
+
+        function dispararToast(el) {
+            const msg  = el.getAttribute('data-msg') || '';
+            const tipo = el.getAttribute('data-tipo') || 'email';
+            const tema = TEMAS[tipo] || TEMAS.email;
+            const contenedor = document.getElementById('contenedor-notis');
+
+            const noti = document.createElement('div');
+            noti.className = 'toast-noti';
+            noti.style.setProperty('--tn-from', tema.from);
+            noti.style.setProperty('--tn-to',   tema.to);
+
+            noti.innerHTML = `
+                <button class="tn-close" aria-label="Cerrar">×</button>
+                <div class="tn-icon">${tema.icon}</div>
+                <div class="tn-body">
+                    <div class="tn-title">${tema.label}</div>
+                    <div class="tn-msg">${msg}</div>
+                </div>
+            `;
+
+            const cerrar = () => {
+                if (!noti.isConnected) return;
+                noti.classList.add('hide');
+                setTimeout(() => noti.remove(), 280);
+            };
+
+            noti.querySelector('.tn-close').addEventListener('click', cerrar);
+            contenedor.appendChild(noti);
+            setTimeout(cerrar, 3500);
+        }
+    </script>
+</body>
+</html>
